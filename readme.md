@@ -40,7 +40,7 @@ d['y'] = '好！'
 只要使用pip安装就行啦！
 
 ```sh
-pip install rimo_storage
+pip install rimo-storage
 ```
 
 
