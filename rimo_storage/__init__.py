@@ -57,6 +57,8 @@ class 好dict(Mapping[str, bytes]):
         return (self.path/k[:2]/(k[2:]+'_')).is_file()
 
     def __getitem__(self, k: str):
+        if k not in self:
+            raise KeyError(k)
         with open(self.path/k[:2]/(k[2:]+'_'), 'rb') as f:
             t = f.read()
         return self.decompress(t)

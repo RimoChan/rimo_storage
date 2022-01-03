@@ -7,7 +7,7 @@ setuptools.setup(
     author='RimoChan',
     author_email='the@librian.net',
     description='好！',
-    long_description='喵喵喵！',
+    long_description=open('readme.md', encoding='utf8').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/RimoChan/rimo_storage',
     packages=['rimo_storage'],

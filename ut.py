@@ -14,7 +14,7 @@ def 检查(x, y, q=False):
         al = ['zlib']
     else:
         al = [*rimo_storage._压缩, None]
-    for 类 in [rimo_storage.好dict, rimo_storage.超dict]: 
+    for 类 in [rimo_storage.好dict, rimo_storage.超dict]:
         for c in al:
             print(f'类: {类}, 压缩: {c}')
             if os.path.isdir(f'_ut_{c}'):
@@ -48,6 +48,9 @@ def 检查(x, y, q=False):
             for k in 真d:
                 assert 真d[k] == d[k]
             assert sorted([*真d.items()]) == sorted([*d.items()])
+
+            assert d.get('x') is None
+            assert d.get('y', '一') == '一'
 
             shutil.rmtree(f'_ut_{c}')
 
