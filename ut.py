@@ -52,6 +52,12 @@ def 检查(x, y, q=False):
             assert d.get('x') is None
             assert d.get('y', '一') == '一'
 
+            for k in d:
+                del d[k]
+                assert k not in d
+            assert len(d)==0
+            assert [*d.items()] == []
+
             shutil.rmtree(f'_ut_{c}')
 
 

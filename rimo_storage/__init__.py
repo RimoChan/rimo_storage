@@ -5,7 +5,7 @@ import lzma
 import json
 import pickle
 from pathlib import Path
-from typing import Mapping, Callable, Tuple, Union, Any
+from typing import MutableMapping, Callable, Tuple, Union, Any
 
 
 _压缩 = {
@@ -44,7 +44,7 @@ def _cf(s: F, d: dict) -> Tuple[Callable, Callable]:
         return s
 
 
-class 好dict(Mapping[str, bytes]):
+class 好dict(MutableMapping[str, bytes]):
     def __init__(self, path, compress: F = None):
         self.path = Path(path)
         if self.path.is_file():
@@ -71,6 +71,9 @@ class 好dict(Mapping[str, bytes]):
         with open(self.path/k[:2]/(k[2:]+'_'), 'wb') as f:
             f.write(t)
 
+    def __delitem__(self, k):
+        os.remove(self.path/k[:2]/(k[2:]+'_'))
+
     def __len__(self):
         return sum([len(os.listdir(self.path/a)) for a in os.listdir(self.path)])
 
@@ -80,7 +83,7 @@ class 好dict(Mapping[str, bytes]):
                 yield a+b[:-1]
 
 
-# 它继承了Mapping[str, bytes]，但是其实它是Mapping[str, Any]，但是我也不知道怎么办
+# 它继承了MutableMapping[str, bytes]，但是其实它是MutableMapping[str, Any]，但是我也不知道怎么办
 class 超dict(好dict):
     def __init__(self, path, compress: F = None, serialize: F = 'json'):
         super().__init__(path, compress)
