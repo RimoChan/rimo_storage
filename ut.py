@@ -94,3 +94,6 @@ for serialize in ['pickle', 'json']:
     assert f.count < 1000
 
     shutil.rmtree(f'_rimocache_f_{serialize}')
+
+
+print('好耶！')

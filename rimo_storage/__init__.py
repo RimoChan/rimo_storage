@@ -4,6 +4,8 @@ import zlib
 import lzma
 import json
 import pickle
+import hashlib
+import threading
 from pathlib import Path
 from typing import MutableMapping, Callable, Tuple, Union, Any
 
@@ -30,6 +32,8 @@ _序列化 = {
         json.loads,
     ),
 }
+
+_锁 = {hex(i)[2:].zfill(2): threading.Lock() for i in range(256)}
 
 
 F = Union[str, Tuple[Callable, Callable], None]
@@ -59,8 +63,11 @@ class 好dict(MutableMapping[str, bytes]):
     def __getitem__(self, k: str):
         if k not in self:
             raise KeyError(k)
+        rk = hashlib.md5(k.encode('utf8')).hexdigest()[:2]
+        _锁[rk].acquire()
         with open(self.path/k[:2]/(k[2:]+'_'), 'rb') as f:
             t = f.read()
+        _锁[rk].release()
         return self.decompress(t)
 
     def __setitem__(self, k: str, v):
@@ -68,8 +75,11 @@ class 好dict(MutableMapping[str, bytes]):
             (self.path/k[:2]).mkdir(exist_ok=True)
             self.dirs.add(k[:2])
         t = self.compress(v)
+        rk = hashlib.md5(k.encode('utf8')).hexdigest()[:2]
+        _锁[rk].acquire()
         with open(self.path/k[:2]/(k[2:]+'_'), 'wb') as f:
             f.write(t)
+        _锁[rk].release()
 
     def __delitem__(self, k):
         os.remove(self.path/k[:2]/(k[2:]+'_'))
