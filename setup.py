@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='rimo_storage',
-    version='1.3.0',
+    version='1.3.1',
     author='RimoChan',
     author_email='the@librian.net',
     description='好！',
