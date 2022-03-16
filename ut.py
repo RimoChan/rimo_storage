@@ -1,7 +1,9 @@
 import os
+import time
 import shutil
 import random
 import string
+import concurrent.futures
 
 import rimo_storage
 print(rimo_storage.__file__)
@@ -94,6 +96,36 @@ for serialize in ['pickle', 'json']:
     assert f.count < 1000
 
     shutil.rmtree(f'_rimocache_f_{serialize}')
+
+
+def 检查多线程():
+    if os.path.isdir(f'_ut_thread'):
+        shutil.rmtree(f'_ut_thread')
+    d = rimo_storage.超dict(f'_ut_thread')
+    乘 = random.randint(1024, 2048)
+    def f(k):
+        time.sleep(random.random()/10)
+        s = str(random.randint(0, 9))
+        d[k] = (s+k) * 乘
+    l = [*range(1024)] * 10
+    random.shuffle(l)
+    for i in range(1024):
+        d[str(i)] = None
+    a = concurrent.futures.ThreadPoolExecutor(max_workers=512)
+    a.map(f, map(str, l))
+    for _ in range(2):
+        for k, v in d.items():
+            if v is not None:
+                assert (v[0]+k) * 乘 == v, f'{k}, {v}'
+    a.shutdown()
+    for k, v in d.items():
+        assert (v[0]+k) * 乘 == v, f'{k}, {v}'
+
+
+print('=====检查多线程=====')
+for i in range(5):
+    print(f'第{i+1}遍')
+    检查多线程()
 
 
 print('好耶！')
