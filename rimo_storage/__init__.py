@@ -1,10 +1,9 @@
 import os
-import sys
 import zlib
-import lzma
 import json
 import pickle
 import hashlib
+import logging
 import threading
 from pathlib import Path
 from typing import MutableMapping, Callable, Tuple, Union, Any
@@ -14,12 +13,18 @@ _压缩 = {
     'zlib': (
         zlib.compress,
         zlib.decompress,
-    ),
-    'lzma': (
+    )
+}
+
+
+try:
+    import lzma
+    _压缩['lzma'] = (
         lzma.compress,
         lzma.decompress,
-    ),
-}
+    )
+except ModuleNotFoundError:
+    logging.warning('没有安装lzma！')
 
 
 _序列化 = {
