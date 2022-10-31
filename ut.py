@@ -19,6 +19,7 @@ def 检查(x, y, q=False):
     for 类 in [rimo_storage.好dict, rimo_storage.超dict]:
         for c in al:
             print(f'类: {类}, 压缩: {c}')
+            开始时间 = time.time()
             if os.path.isdir(f'_ut_{c}'):
                 shutil.rmtree(f'_ut_{c}')
             d = 类(f'_ut_{c}', compress=c)
@@ -59,7 +60,7 @@ def 检查(x, y, q=False):
                 assert k not in d
             assert len(d)==0
             assert [*d.items()] == []
-
+            print('用时:', time.time() - 开始时间)
             shutil.rmtree(f'_ut_{c}')
 
 
@@ -99,9 +100,9 @@ for serialize in ['pickle', 'json']:
 
 
 def 检查多线程():
-    if os.path.isdir(f'_ut_thread'):
-        shutil.rmtree(f'_ut_thread')
-    d = rimo_storage.超dict(f'_ut_thread')
+    if os.path.isdir('_ut_thread'):
+        shutil.rmtree('_ut_thread')
+    d = rimo_storage.超dict('_ut_thread')
     乘 = random.randint(1024, 2048)
     def f(k):
         time.sleep(random.random()/10)
@@ -125,7 +126,9 @@ def 检查多线程():
 print('=====检查多线程=====')
 for i in range(5):
     print(f'第{i+1}遍')
+    开始时间 = time.time()
     检查多线程()
+    print('用时:', time.time() - 开始时间)
 
 
 print('好耶！')
