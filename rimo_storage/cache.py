@@ -1,6 +1,6 @@
 import hashlib
 
-from . import 好dict, 超dict, _cf, _序列化
+from . import 超dict, _cf, _序列化
 
 
 _ext = {
@@ -23,11 +23,11 @@ def disk_cache(path=None, compress=None, serialize='json'):
             md5 = hashlib.md5(dump(i)).hexdigest()
             名字 = f'{md5}.{ext}'
             if 名字 in map:
-                i, o = map[名字]
+                _, o = map[名字]
                 return o
             else:
                 o = func(*li, **d)
-                s = [i, o]
+                s = [None, o]
                 map[名字] = s
                 return o
         return 假func
